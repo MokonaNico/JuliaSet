@@ -1,0 +1,64 @@
+
+
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath 'org.openjfx:javafx-plugin:0.0.7'
+    }
+}
+
+apply plugin: 'org.openjfx.javafxplugin'
+apply plugin: 'application'
+apply plugin: 'java'
+apply plugin: 'idea'
+
+repositories {
+    jcenter()
+    mavenCentral()
+    flatDir {
+        dirs 'src/libs'
+    }
+}
+
+dependencies {
+    testImplementation('junit:junit:4.13')
+}
+
+javafx {
+    version = "11"
+    modules = [ 'javafx.controls','javafx.fxml','javafx.base' ]
+}
+application{
+    mainClassName = 'JuliaSet.Main'
+}
+
+
+jar {
+    manifest {
+        attributes "Main-Class": "$mainClassName"
+    }
+
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+task fatJar(type: Jar) {
+    manifest {
+        attributes "Main-Class": "$mainClassName"
+    }
+
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    with jar
+}
+
+task runJar(type: JavaExec) {
+    main = "-jar";
+}
