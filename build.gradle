@@ -1,64 +1,29 @@
 
-
-buildscript {
-    repositories {
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
-    }
-    dependencies {
-        classpath 'org.openjfx:javafx-plugin:0.0.7'
-    }
+plugins {
+    id 'java'
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.7'
 }
 
-apply plugin: 'org.openjfx.javafxplugin'
-apply plugin: 'application'
-apply plugin: 'java'
-apply plugin: 'idea'
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+mainClassName = 'JuliaSet.Main'
 
 repositories {
-    jcenter()
     mavenCentral()
-    flatDir {
-        dirs 'src/libs'
-    }
 }
 
 dependencies {
-    testImplementation('junit:junit:4.13')
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
 }
 
-javafx {
-    version = "11"
-    modules = [ 'javafx.controls','javafx.fxml','javafx.base' ]
-}
-application{
-    mainClassName = 'JuliaSet.Main'
+test {
+    useJUnitPlatform()
 }
 
-
-jar {
-    manifest {
-        attributes "Main-Class": "$mainClassName"
-    }
-
-    from {
-        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
-    }
-}
-
-task fatJar(type: Jar) {
-    manifest {
-        attributes "Main-Class": "$mainClassName"
-    }
-
-    from {
-        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
-        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
-    }
-    with jar
-}
-
-task runJar(type: JavaExec) {
-    main = "-jar";
+javafx{
+    modules = ['javafx.controls', 'javafx.fxml','javafx.swing']
+    version '11.0.2'
 }

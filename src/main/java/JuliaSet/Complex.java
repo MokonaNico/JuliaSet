@@ -10,16 +10,27 @@ public class Complex {
         this.imaginary = imaginary;
     }
 
-    public Complex Add(Complex other){
+    public Complex add(Complex other){
         return new Complex(real + other.real, imaginary + other.imaginary);
     }
 
-    public Complex Mult(Complex other){
-        return new Complex(real * other.real - imaginary * other.imaginary,
-                                imaginary * other.real + real * other.imaginary);
+    public Complex mult(Complex other){
+        double resReal = real * other.real - imaginary * other.imaginary;
+        double resImaginary = imaginary * other.real + real * other.imaginary;
+        return new Complex(resReal, resImaginary);
     }
 
-    public double Mod(){
+    public double mod(){
         return Math.sqrt(real*real + imaginary*imaginary);
+    }
+
+    public double squaredMod(){
+        return real * real + imaginary * imaginary;
+    }
+
+    public Complex square(){
+        double resReal = real * real - imaginary * imaginary;
+        double resImaginary = 2 * imaginary * real;
+        return new Complex(resReal, resImaginary);
     }
 }
